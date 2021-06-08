@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "twilio": "^3.63.1",
+    "twilio-chat": "^5.0.0"
+  }
+}
