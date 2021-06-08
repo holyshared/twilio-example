@@ -11,10 +11,10 @@ export const Main = () => {
       if (!twilio) {
         return;
       }
-//      const result = await twilio.getUserChannelDescriptors();
-  //    setCurrentChannels(result.items);
+      const result = await twilio.getUserChannelDescriptors();
+      setCurrentChannels(result.items);
     })();
-  }, [twilio])
+  }, [twilio, setCurrentChannels])
 
   return (
     <div>

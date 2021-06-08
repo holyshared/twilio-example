@@ -1,23 +1,22 @@
-import React, { createContext, PropsWithChildren } from "react";
-import Twilio from "twilio-chat";
-import axios from "axios";
+import React, { createContext, useState, useEffect, PropsWithChildren } from "react";
+import { create, Chat }from "./twilio-client";
+import { httpClient } from "./axios";
 
-const httpClient = axios.create({
-  baseURL: 'http://localhost:3000',
-});
-
-export const TwilioContext = createContext<Twilio | null>(null);
+export const TwilioContext = createContext<Chat | null>(null);
 
 export const TwilioProvider = ({ children }: PropsWithChildren<{}>) => {
-  let currentClient = null;
+  const [currentClient, setClient] = useState(null);
 
-  httpClient.post("/token").then((res) => {
-    return Twilio.create(res.data.jwt);
-  }).then((client) => {
-    currentClient = client;
-  }).catch(err => {
-    console.log(err);
-  });
+  useEffect(() => {
+    httpClient.post("/token").then((res) => {
+      return create(res.data.jwt);
+    }).then((client) => {
+      console.log("set current");
+      setClient(client);
+    }).catch(err => {
+      console.log(err);
+    });
+  }, [setClient]);
 
   return currentClient ? (
     <TwilioContext.Provider value={currentClient}>

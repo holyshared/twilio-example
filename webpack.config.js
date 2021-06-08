@@ -19,11 +19,11 @@ module.exports = [
           test: /\.(ts|tsx)$/,
           exclude: /node_modules/,
           use: {
-            loader: "ts-loader",
+            loader: 'babel-loader',
             options: {
-              configFile: path.resolve(__dirname, './tsconfig.client.json')
-            }
-          }
+              caller: { target: 'web' },
+            },
+          },
         }
       ],
     },
@@ -38,6 +38,7 @@ module.exports = [
     },
     stats: 'errors-only',
     optimization: {
+      minimize: false,
       splitChunks: {
         cacheGroups: {
           commons: {
