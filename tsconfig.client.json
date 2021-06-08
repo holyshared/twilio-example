@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
     "module": "esnext",
-    "target": "es2015",
+    "target": "esnext",
     "esModuleInterop": true,
+    "moduleResolution": "Node",
+    "jsx": "react",
     "outDir": "dist"
   },
   "include": [
-    "src/**/*"
+    "src/client/**/*"
   ],
   "exclude": [
     "node_modules"
