@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "./dist/server/app.js",
+    "start": "./dist/app.js",
     "build": "yarn build:client && yarn build:server",
     "build:server": "tsc",
     "build:client": "rollup --config --format iife"
