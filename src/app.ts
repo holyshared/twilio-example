@@ -5,6 +5,12 @@ const ChatGrant = jwt.AccessToken.ChatGrant;
 
 const app = express();
 
+app.use(
+  express.static("public", {
+    maxAge: 60,
+  }),
+);
+
 app.post("/token", (req, res) => {
   const chatGrant = new ChatGrant({
     serviceSid: process.env.TWILIO_SERVICE_SID,
