@@ -7,7 +7,7 @@ const app = express();
 
 app.post("/token", (req, res) => {
   const chatGrant = new ChatGrant({
-    serviceSid: process.env.SERVICE_SID,
+    serviceSid: process.env.TWILIO_SERVICE_SID,
   });
 
   const token = new jwt.AccessToken(
