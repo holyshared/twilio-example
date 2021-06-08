@@ -1,11 +1,13 @@
 {
   "scripts": {
-    "start": "./dist/app.js",
+    "start": "./dist/server/app.js",
+    "build": "yarn build:client && yarn build:server",
     "build:server": "tsc",
     "build:client": "rollup --config --format iife"
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "twilio": "^3.63.1",
     "twilio-chat": "^5.0.0"
