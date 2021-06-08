@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "start": "./dist/app.js",
     "build:server": "tsc"
   },
   "dependencies": {
