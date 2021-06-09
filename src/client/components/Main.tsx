@@ -2,17 +2,22 @@ import React, { useContext, useEffect, useState } from "react";
 import { TwilioContext } from "./contexts/twilio";
 import { ChannelList } from "./ChannelList";
 import { MessageList } from "./MessageList";
+import { MessageField } from "./MessageField";
 import { ChannelDescriptor } from "twilio-chat/lib/channeldescriptor";
 
-const MESSAGE_COUNT = 15;
+const MESSAGE_COUNT = 10;
 
 export const Main = () => {
   const twilio = useContext(TwilioContext);
+  const [currentChannel, setCurrentChannel] = useState(null);
   const [currentChannels, setCurrentChannels] = useState([]);
   const [currentMessages, setCurretMessages] = useState([]);
 
   const handleChannelSelect = (channelDescriptor: ChannelDescriptor) => {
-    channelDescriptor.getChannel().then(channel => channel.getMessages(MESSAGE_COUNT)).then((result) => {
+    channelDescriptor.getChannel().then(channel => {
+      setCurrentChannel(channel);
+      return channel.getMessages(MESSAGE_COUNT);
+    }).then((result) => {
       setCurretMessages(result.items);
     });
   };
@@ -36,6 +41,7 @@ export const Main = () => {
       </div>
       <div className="messages">
         <MessageList items={currentMessages} />
+        <MessageField channel={currentChannel} />
       </div>
     </div>
   );

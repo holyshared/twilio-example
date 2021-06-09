@@ -16,8 +16,8 @@ const MessageItem = ({ item }: { item: Message }) => {
 export const MessageList = ({ items }: { items: Message[] }) => {
   const render = (item) => <MessageItem key={item.sid} item={item} />;
   return (
-    <ul>
+    <div className="messages">
       {items.map(render)}
-    </ul>
+    </div>
   );
 }
