@@ -1,5 +1,5 @@
 import React, { SyntheticEvent, useRef } from "react";
-import { Channel } from "twilio-chat/lib/channel";
+import { Channel } from "../domain/Channel";
 
 export const MessageField = ({ channel }: { channel: Channel }) => {
   const textareaRef = useRef<HTMLTextAreaElement>();

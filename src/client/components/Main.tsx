@@ -1,83 +1,102 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import { TwilioContext } from "./contexts/twilio";
 import { ChannelList } from "./ChannelList";
 import { MessageList } from "./MessageList";
 import { MessageField } from "./MessageField";
-import { Channel } from "twilio-chat/lib/channel";
+import { Channel as TwilioChannel } from "twilio-chat/lib/channel";
+import { Channel } from "../domain/Channel";
+import { Loading } from "./Loading";
 
 const MESSAGE_COUNT = 10;
 
 export const Main = () => {
   const twilio = useContext(TwilioContext);
   const [currentChannel, setCurrentChannel] = useState<Channel | null>(null);
-  const [currentUnreadCounts, setCurrentUnreadCounts] = useState<Map<string, number>>(new Map());
-  const [currentChannels, setCurrentChannels] = useState<Channel[]>([]);
-  const [currentMessages, setCurretMessages] = useState([]);
+  const [currentChannels, setCurrentChannels] = useState<Channel[] | null>(null);
 
-  const handleChannelSelect = (channel: Channel) => {
-    setCurrentChannel(channel);
-    channel.getMessages(MESSAGE_COUNT).then((result) => {
-      setCurretMessages(result.items);
+  const handleChannelSelect = useCallback((_prev: Channel, next: Channel) => {
+    next.refreshMessages(MESSAGE_COUNT).then((channel) => {
+      setCurrentChannel(channel);
     });
-  };
+  }, [setCurrentChannel, currentChannel]);
+
+  const handleUpdated = useCallback(({ channel, updateReasons }: { channel: TwilioChannel; updateReasons: string[] }, channels) => {
+    const needUnreadUpdate = updateReasons.includes("lastMessage") || updateReasons.includes("lastConsumedMessageIndex");
+    if (!needUnreadUpdate) {
+      return;
+    }
+    console.log(`updated channels: ${channel.sid}`);
+
+    const target = channels.find(c => c.sid === channel.sid);
+    target.refresh(channel);
+
+    setCurrentChannels([...channels]);
+  }, [setCurrentChannels]);
+
+  const handleMessageAdded = useCallback((message, channels) => {
+console.log(message);
+    const target = channels.find(c => c.sid === message.channel.sid);
+    target.addMessage(message);
+
+    setCurrentChannels([...channels]);
+  }, [setCurrentChannel]);
 
   useEffect(() => {
+    let c = (updated) => {
+      console.log(currentChannel);
+      console.log(currentChannels);
+      handleUpdated(updated, currentChannels);
+    };
+    let d = (message) => {
+      console.log(currentChannel);
+      console.log(currentChannels);
+      handleMessageAdded(message, currentChannels);
+    };
+
     (async () => {
       if (!twilio) {
         return;
       }
       const result = await twilio.getSubscribedChannels();
+      const channels = result.items.map(item => new Channel(item));
+      const channel = await channels[0].refreshMessages(MESSAGE_COUNT);
 
-      setCurrentChannels(result.items);
+      c = (updated) => {
+        handleUpdated(updated, channels);
+      };
+      d = (message) => {
+        handleMessageAdded(message, channels);
+      };
 
-      const newUnreadCount = result.items.reduce((unread, item) => {
-        const count = item.lastMessage ? item.lastMessage.index - item.lastConsumedMessageIndex : 0;
-        console.log("initial unread------------------");
-        console.log(count);
-        return unread.set(item.sid, count);
-      }, currentUnreadCounts);
-      setCurrentUnreadCounts(newUnreadCount);
-
-      handleChannelSelect(result.items[0]);
+      channels.forEach((channel) => {
+        channel.on("updated", c);
+        channel.on("messageAdded", d);
+      });
+      console.log("first set");
+      setCurrentChannels(channels);
+      setCurrentChannel(channel);
     })();
-  }, [twilio, setCurrentChannels, setCurrentUnreadCounts, currentUnreadCounts]);
-
-  useEffect(() => {
-    if (!currentChannel) {
-      return;
-    }
-    const handleMessageAdded = (message) => {
-      setCurretMessages([ ...currentMessages, message ]);
-    };
-    const handleUpdated = ({ channel, updateReasons }: { channel: Channel; updateReasons: string[]   }) => {
-      const needUnreadUpdate = updateReasons.includes("lastMessage") || updateReasons.includes("lastConsumedMessageIndex");
-      if (!needUnreadUpdate) {
-        return;
-      }
-console.log("updated------------------");
-console.log(channel.lastMessage.index - channel.lastConsumedMessageIndex);
-      currentUnreadCounts.set(channel.sid, channel.lastMessage.index - channel.lastConsumedMessageIndex);
-      setCurrentUnreadCounts(currentUnreadCounts);
-    };
-    currentChannel.removeListener("messageAdded", handleMessageAdded);
-    currentChannel.removeListener("updated", handleUpdated);
-    currentChannel.on("messageAdded", handleMessageAdded);
-    currentChannel.on("updated", handleUpdated);
 
     return () => {
-      currentChannel.removeListener("messageAdded", handleMessageAdded);
-      currentChannel.removeListener("updated", handleUpdated);
+      currentChannels.forEach((channel) => {
+        channel.on("updated", c);
+        channel.on("messageAdded", d);
+      });
     };
-  }, [currentChannel, currentMessages, setCurretMessages, currentUnreadCounts, setCurrentUnreadCounts]);
+  }, [twilio]);
 
   return (
     <div className="main">
       <div className="channels">
-        <ChannelList channels={currentChannels} unreadCounts={currentUnreadCounts} onChannelSelect={handleChannelSelect} />
+        {currentChannel && currentChannels ? <ChannelList current={currentChannel} channels={currentChannels} onChannelSelect={handleChannelSelect} /> : <Loading message="Loading channels" />}  
       </div>
       <div className="messages">
-        <MessageList items={currentMessages} />
-        <MessageField channel={currentChannel} />
+        {currentChannel && currentChannels ? (
+          <>
+            <MessageList channel={currentChannel} />
+            <MessageField channel={currentChannel} />
+          </>
+        ):  <Loading message="Loading channel" />}
       </div>
     </div>
   );
