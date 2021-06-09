@@ -28,10 +28,24 @@
   margin: 0;
 }
 .channel__button {
-  display: inline-block;
+  display: grid;
+  grid-template-columns: 1fr 30px;
   padding: 10px;
   border-bottom: 1px solid #ddd;
+  align-items: center;
 }
+
+.channel__unread__count {
+  display: flex;
+  border-radius: 5px;
+  background-color: crimson;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+  justify-content: center;
+  align-items: center;
+}
+
 .message__context {
   display: flex;
   align-items: center;
