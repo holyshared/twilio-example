@@ -4,6 +4,7 @@ import { ChannelList } from "./ChannelList";
 import { MessageList } from "./MessageList";
 import { MessageField } from "./MessageField";
 import { ChannelDescriptor } from "twilio-chat/lib/channeldescriptor";
+import { Loading } from "./Loading";
 
 const MESSAGE_COUNT = 10;
 

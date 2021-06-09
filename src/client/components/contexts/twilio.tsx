@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, PropsWithChildren } from "react";
 import { create, Chat }from "./twilio-client";
 import { httpClient } from "./axios";
+import { Loading } from "../Loading";
 
 export const TwilioContext = createContext<Chat | null>(null);
 
@@ -22,5 +23,5 @@ export const TwilioProvider = ({ children }: PropsWithChildren<{}>) => {
     <TwilioContext.Provider value={currentClient}>
       {children}
     </TwilioContext.Provider>
-  ): null;
+  ): <Loading message="Initializing" />;
 };

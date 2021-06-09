@@ -52,3 +52,9 @@
 .unread {
   font-weight: bold;
 }
+
+.loading {
+  padding: 30px;
+  text-align: center;
+  background-color: #ddd;
+}
