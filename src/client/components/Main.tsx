@@ -4,13 +4,13 @@ import { ChannelList } from "./ChannelList";
 import { MessageList } from "./MessageList";
 import { MessageField } from "./MessageField";
 import { ChannelDescriptor } from "twilio-chat/lib/channeldescriptor";
-import { Loading } from "./Loading";
+import { Channel } from "twilio-chat/lib/channel";
 
 const MESSAGE_COUNT = 10;
 
 export const Main = () => {
   const twilio = useContext(TwilioContext);
-  const [currentChannel, setCurrentChannel] = useState(null);
+  const [currentChannel, setCurrentChannel] = useState<Channel | null>(null);
   const [currentChannels, setCurrentChannels] = useState([]);
   const [currentMessages, setCurretMessages] = useState([]);
 
@@ -30,10 +30,25 @@ export const Main = () => {
       }
       const result = await twilio.getUserChannelDescriptors();
       setCurrentChannels(result.items);
-
       handleChannelSelect(result.items[0]);
     })();
   }, [twilio, setCurrentChannels])
+
+  useEffect(() => {
+    if (!currentChannel) {
+      return;
+    }
+    const handleMessageAdded = (message) => {
+      setCurretMessages([ ...currentMessages, message ]);
+    };
+  
+    currentChannel.removeListener("messageAdded", handleMessageAdded);
+    currentChannel.on("messageAdded", handleMessageAdded);
+
+    return () => {
+      currentChannel.removeListener("messageAdded", handleMessageAdded);
+    };
+  }, [currentChannel, currentMessages, setCurretMessages]);
 
   return (
     <div className="main">
