@@ -1,3 +1,50 @@
+.body {
+  padding: 0;
+  margin: 0;
+}
+.header {
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+}
+.header__title {
+  font-size: 1em;
+  flex: 1;
+}
+.main {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  margin: 20px auto 0 auto;
+  width: 1000px;
+}
+.channel__list {
+  margin: 0;
+  padding: 0;
+}
+.channel {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.channel__button {
+  display: inline-block;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+.message__context {
+  display: flex;
+  align-items: center;
+  font-size: 0.7em;
+}
+.message__date {
+  margin-left: 10px;
+  flex: 1;
+}
+.message__body {
+  margin-top: 15px;
+  display: inline-block;
+}
 .message {
   padding: 10px;
   border-bottom: 1px solid #ddd;
