@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React from "react";
 import { Message } from "twilio-chat/lib/message";
-import { Channel } from "../domain/Channel";
 
 const MessageItem = ({ item }: { item: Message }) => {
   return (
@@ -14,31 +13,11 @@ const MessageItem = ({ item }: { item: Message }) => {
   );
 };
 
-export const MessageList = ({ channel }: { channel: Channel }) => {
-//  const [messages, setMessages] = useState(channel.messages);
-
-  /*
-  const handleMessageAdded = useCallback((message) => {
-    messages.push(message);
-    setMessages(messages);
-  }, [messages, setMessages]);
-
-  useEffect(() => {
-    console.log(`messagedAdded off ${channel.sid}`);
-    channel.off("messageAdded", handleMessageAdded);
-    console.log(`messagedAdded on ${channel.sid}`);
-    channel.on("messageAdded", handleMessageAdded);
-
-    return () => {
-      channel.off("messageAdded", handleMessageAdded);
-    };
-  }, [channel, handleMessageAdded]);
-  */
-
+export const MessageList = ({ items }: { items: Message[] }) => {
   const render = (item) => <MessageItem key={item.sid} item={item} />;
   return (
     <div className="messages">
-      {channel.messages.map(render)}
+      {items.map(render)}
     </div>
   );
 }

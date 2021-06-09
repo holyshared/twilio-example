@@ -25,7 +25,6 @@ export const Main = () => {
     if (!needUnreadUpdate) {
       return;
     }
-    console.log(`updated channels: ${channel.sid}`);
 
     const target = channels.find(c => c.sid === channel.sid);
     target.refresh(channel);
@@ -34,7 +33,6 @@ export const Main = () => {
   }, [setCurrentChannels]);
 
   const handleMessageAdded = useCallback((message, channels) => {
-console.log(message);
     const target = channels.find(c => c.sid === message.channel.sid);
     target.addMessage(message);
 
@@ -42,16 +40,8 @@ console.log(message);
   }, [setCurrentChannel]);
 
   useEffect(() => {
-    let c = (updated) => {
-      console.log(currentChannel);
-      console.log(currentChannels);
-      handleUpdated(updated, currentChannels);
-    };
-    let d = (message) => {
-      console.log(currentChannel);
-      console.log(currentChannels);
-      handleMessageAdded(message, currentChannels);
-    };
+    let updated = (_updated) => {};
+    let messageAdded = (_message) => {};
 
     (async () => {
       if (!twilio) {
@@ -61,26 +51,21 @@ console.log(message);
       const channels = result.items.map(item => new Channel(item));
       const channel = await channels[0].refreshMessages(MESSAGE_COUNT);
 
-      c = (updated) => {
-        handleUpdated(updated, channels);
-      };
-      d = (message) => {
-        handleMessageAdded(message, channels);
-      };
+      updated = (updated) => handleUpdated(updated, channels);
+      messageAdded = (message) => handleMessageAdded(message, channels);
 
       channels.forEach((channel) => {
-        channel.on("updated", c);
-        channel.on("messageAdded", d);
+        channel.on("updated", updated);
+        channel.on("messageAdded", messageAdded);
       });
-      console.log("first set");
       setCurrentChannels(channels);
       setCurrentChannel(channel);
     })();
 
     return () => {
       currentChannels.forEach((channel) => {
-        channel.on("updated", c);
-        channel.on("messageAdded", d);
+        channel.off("updated", updated);
+        channel.off("messageAdded", messageAdded);
       });
     };
   }, [twilio]);
@@ -93,7 +78,7 @@ console.log(message);
       <div className="messages">
         {currentChannel && currentChannels ? (
           <>
-            <MessageList channel={currentChannel} />
+            <MessageList items={currentChannel.messages} />
             <MessageField channel={currentChannel} />
           </>
         ):  <Loading message="Loading channel" />}
