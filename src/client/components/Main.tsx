@@ -3,7 +3,6 @@ import { TwilioContext } from "./contexts/twilio";
 import { ChannelList } from "./ChannelList";
 import { MessageList } from "./MessageList";
 import { MessageField } from "./MessageField";
-import { ChannelDescriptor } from "twilio-chat/lib/channeldescriptor";
 import { Channel } from "twilio-chat/lib/channel";
 
 const MESSAGE_COUNT = 10;
@@ -12,14 +11,12 @@ export const Main = () => {
   const twilio = useContext(TwilioContext);
   const [currentChannel, setCurrentChannel] = useState<Channel | null>(null);
   const [currentUnreadCounts, setCurrentUnreadCounts] = useState<Map<string, number>>(new Map());
-  const [currentChannels, setCurrentChannels] = useState([]);
+  const [currentChannels, setCurrentChannels] = useState<Channel[]>([]);
   const [currentMessages, setCurretMessages] = useState([]);
 
-  const handleChannelSelect = (channelDescriptor: ChannelDescriptor) => {
-    channelDescriptor.getChannel().then(channel => {
-      setCurrentChannel(channel);
-      return channel.getMessages(MESSAGE_COUNT);
-    }).then((result) => {
+  const handleChannelSelect = (channel: Channel) => {
+    setCurrentChannel(channel);
+    channel.getMessages(MESSAGE_COUNT).then((result) => {
       setCurretMessages(result.items);
     });
   };
@@ -29,16 +26,12 @@ export const Main = () => {
       if (!twilio) {
         return;
       }
-      const result = await twilio.getUserChannelDescriptors();
+      const result = await twilio.getSubscribedChannels();
+
       setCurrentChannels(result.items);
 
       const newUnreadCount = result.items.reduce((unread, item) => {
-        let count = 0; 
-        if (item.lastConsumedMessageIndex) {
-          count = item.messagesCount - item.lastConsumedMessageIndex - 1;
-        } else {
-          count = item.messagesCount;
-        }
+        const count = item.lastMessage ? item.lastMessage.index - item.lastConsumedMessageIndex : 0;
         console.log("initial unread------------------");
         console.log(count);
         return unread.set(item.sid, count);
