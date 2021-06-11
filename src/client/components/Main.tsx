@@ -20,28 +20,26 @@ export const Main = () => {
     });
   }, [setCurrentChannel, currentChannel]);
 
-  const handleUpdated = useCallback(({ channel, updateReasons }: { channel: TwilioChannel; updateReasons: string[] }, channels) => {
+  const handleUpdated = useCallback(({ channel, updateReasons }: { channel: TwilioChannel; updateReasons: string[] }) => {
     const needUnreadUpdate = updateReasons.includes("lastMessage") || updateReasons.includes("lastConsumedMessageIndex");
     if (!needUnreadUpdate) {
       return;
     }
 
-    const target = channels.find(c => c.sid === channel.sid);
+    const target = currentChannels.find(c => c.sid === channel.sid);
     target.refresh(channel);
 
-    setCurrentChannels([...channels]);
-  }, [setCurrentChannels]);
+    setCurrentChannels([...currentChannels]);
+  }, [setCurrentChannels, currentChannels]);
 
-  const handleMessageAdded = useCallback((message, channels) => {
-    const target = channels.find(c => c.sid === message.channel.sid);
+  const handleMessageAdded = useCallback((message) => {
+    const target = currentChannels.find(c => c.sid === message.channel.sid);
     target.addMessage(message);
 
-    setCurrentChannels([...channels]);
-  }, [setCurrentChannel]);
+    setCurrentChannels([...currentChannels]);
+  }, [setCurrentChannel, currentChannels]);
 
   useEffect(() => {
-    let updated = (_updated) => {};
-    let messageAdded = (_message) => {};
 
     (async () => {
       if (!twilio) {
@@ -51,24 +49,21 @@ export const Main = () => {
       const channels = result.items.map(item => new Channel(item));
       const channel = await channels[0].refreshMessages(MESSAGE_COUNT);
 
-      updated = (updated) => handleUpdated(updated, channels);
-      messageAdded = (message) => handleMessageAdded(message, channels);
-
-      channels.forEach((channel) => {
-        channel.on("updated", updated);
-        channel.on("messageAdded", messageAdded);
-      });
       setCurrentChannels(channels);
       setCurrentChannel(channel);
     })();
 
-    return () => {
-      currentChannels.forEach((channel) => {
-        channel.off("updated", updated);
-        channel.off("messageAdded", messageAdded);
-      });
-    };
   }, [twilio]);
+
+  useEffect(() => {
+  	twilio.on("messageAdded", handleMessageAdded);
+    twilio.on("channelUpdated", handleUpdated);
+
+    return () => {
+	  twilio.off("messageAdded", handleMessageAdded);
+      twilio.off("channelUpdated", handleUpdated);
+    };
+  }, [currentChannels]);
 
   return (
     <div className="main">
