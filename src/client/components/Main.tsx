@@ -7,8 +7,8 @@ import { Channel as TwilioChannel } from "twilio-chat/lib/channel";
 import { Channel } from "../domain/Channel";
 import { Loading } from "./Loading";
 
-import firebase from 'firebase';
-import '@firebase/messaging';
+import firebase from 'firebase/app';
+import 'firebase/messaging';
 
 const MESSAGE_COUNT = 10;
 
