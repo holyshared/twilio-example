@@ -7,6 +7,9 @@ import { Channel as TwilioChannel } from "twilio-chat/lib/channel";
 import { Channel } from "../domain/Channel";
 import { Loading } from "./Loading";
 
+import firebase from 'firebase';
+import '@firebase/messaging';
+
 const MESSAGE_COUNT = 10;
 
 export const Main = () => {
@@ -45,6 +48,25 @@ export const Main = () => {
       if (!twilio) {
         return;
       }
+      const firebaseConfig = {
+        apiKey: process.env.FIREBASE_API_KEY,
+        authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+        appId: process.env.FIREBASE_APP_ID
+      };
+      firebase.initializeApp(firebaseConfig);
+
+      if (firebase && firebase.messaging()) {
+        const fcmToken = await firebase.messaging().getToken();
+        await twilio.setPushRegistrationId('fcm', fcmToken);
+      }
+
+      firebase.messaging().onMessage(payload => {
+        twilio.handlePushNotification(payload)
+      });
+
       const result = await twilio.getSubscribedChannels();
       const channels = result.items.map(item => new Channel(item));
       const channel = await channels[0].refreshMessages(MESSAGE_COUNT);
