@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "node dist/app.js",
+    "start": "node dist/src/server/app.js",
     "build": "yarn build:client && yarn build:server && yarn generate:js",
     "build:server": "tsc",
     "build:client": "webpack",
