@@ -56,11 +56,11 @@ export const Main = () => {
   }, [twilio]);
 
   useEffect(() => {
-  	twilio.on("messageAdded", handleMessageAdded);
+    twilio.on("messageAdded", handleMessageAdded);
     twilio.on("channelUpdated", handleUpdated);
 
     return () => {
-	  twilio.off("messageAdded", handleMessageAdded);
+      twilio.off("messageAdded", handleMessageAdded);
       twilio.off("channelUpdated", handleUpdated);
     };
   }, [currentChannels]);
