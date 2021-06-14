@@ -16,7 +16,7 @@ const main = async () => {
     FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
   })
-  fs.writeFileSync(resolve("./public/assets/js/sw-env.js"), swEnv)
+  fs.writeFileSync(resolve("./public/sw-env.js"), swEnv)
 
   const firebaseMessaging = await render("./templates/firebase-messaging.js.ejs", {
     FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
@@ -26,7 +26,7 @@ const main = async () => {
     FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
   })
-  fs.writeFileSync(resolve("./public/assets/js/firebase-messaging.js"), firebaseMessaging)
+  fs.writeFileSync(resolve("./public/firebase-messaging.js"), firebaseMessaging)
 }
 
 main().then(() => console.log("done")).catch(err => console.log(err));
