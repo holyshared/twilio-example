@@ -26,7 +26,7 @@ const main = async () => {
     FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
   })
-  fs.writeFileSync(resolve("./public/firebase-messaging.js"), firebaseMessaging)
+  fs.writeFileSync(resolve("./public/firebase-messaging-sw.js"), firebaseMessaging)
 }
 
 main().then(() => console.log("done")).catch(err => console.log(err));
