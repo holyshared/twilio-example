@@ -34,12 +34,14 @@ app.post("/token", (req: Request, res: Response) => {
 
 app.post("/pre-hook", (req: Request, res: Response) => {
   console.log("pre-hook ------");
+  console.log(req.headers);
   console.log(req.body);
   res.status(200).end();
 });
 
 app.post("/post-hook", (req: Request, res: Response) => {
   console.log("post-hook ------");
+  console.log(req.headers);
   console.log(req.body);
   res.status(200).end();
 });
