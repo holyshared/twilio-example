@@ -59,12 +59,15 @@ export const Main = () => {
       firebase.initializeApp(firebaseConfig);
 
       if (firebase && firebase.messaging()) {
+        console.log("set fcm token");
         const fcmToken = await firebase.messaging().getToken();
         await twilio.setPushRegistrationId('fcm', fcmToken);
       }
 
       firebase.messaging().onMessage(payload => {
-        twilio.handlePushNotification(payload)
+        console.log("onMessage");
+        console.log(payload);
+        twilio.handlePushNotification(payload);
       });
 
       const result = await twilio.getSubscribedChannels();
