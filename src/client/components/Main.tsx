@@ -42,6 +42,10 @@ export const Main = () => {
     setCurrentChannels([...currentChannels]);
   }, [setCurrentChannel, currentChannels]);
 
+  const handlePushNotification = useCallback((payload) => {
+    console.log(payload);
+  }, []);
+
   useEffect(() => {
 
     (async () => {
@@ -83,10 +87,12 @@ export const Main = () => {
   useEffect(() => {
     twilio.on("messageAdded", handleMessageAdded);
     twilio.on("channelUpdated", handleUpdated);
+    twilio.on("pushNotification", handlePushNotification);
 
     return () => {
       twilio.off("messageAdded", handleMessageAdded);
       twilio.off("channelUpdated", handleUpdated);
+      twilio.off("pushNotification", handlePushNotification);
     };
   }, [currentChannels]);
 
