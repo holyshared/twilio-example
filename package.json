@@ -5,7 +5,8 @@
     "build": "yarn build:client && yarn build:server && yarn generate:js",
     "build:server": "tsc",
     "build:client": "webpack",
-    "generate:js": "node dist/scripts/generate-sw.js"
+    "generate:js": "node dist/scripts/generate-sw.js",
+    "format": "node_modules/.bin/prettier --parser typescript --single-quote --write \"src/**/*.{ts,tsx}\""
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -31,6 +32,7 @@
     "@types/react": "^17.0.9",
     "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "prettier": "^2.3.1",
     "ts-loader": "^9.2.3",
     "typescript": "^4.3.2",
     "webpack": "^5.38.1",

@@ -1,5 +1,5 @@
-import { Channel as TwilioChannel } from "twilio-chat/lib/channel";
-import { Message as TwilioMessage } from "twilio-chat/lib/message";
+import { Channel as TwilioChannel } from 'twilio-chat/lib/channel';
+import { Message as TwilioMessage } from 'twilio-chat/lib/message';
 
 export class Channel {
   private _channel: TwilioChannel;
@@ -8,7 +8,9 @@ export class Channel {
 
   constructor(channel: TwilioChannel) {
     this._channel = channel;
-    this._unreadCount = channel.lastMessage ? channel.lastMessage.index - channel.lastConsumedMessageIndex : 0;
+    this._unreadCount = channel.lastMessage
+      ? channel.lastMessage.index - channel.lastConsumedMessageIndex
+      : 0;
   }
   get sid() {
     return this._channel.sid;
@@ -22,9 +24,9 @@ export class Channel {
   get unreadCount() {
     return this._unreadCount;
   }
-//  public getMessages(pageSize?: number) {
+  //  public getMessages(pageSize?: number) {
   //  return this._channel.getMessages(pageSize);
-//  }
+  //  }
   public sendMessage(message: string) {
     return this._channel.sendMessage(message);
   }
@@ -35,15 +37,19 @@ export class Channel {
     this._channel.removeListener(type, handler);
   }
   public refresh(updatedChannel: TwilioChannel) {
-    this._unreadCount = updatedChannel.lastMessage ? updatedChannel.lastMessage.index - updatedChannel.lastConsumedMessageIndex : 0;
+    this._unreadCount = updatedChannel.lastMessage
+      ? updatedChannel.lastMessage.index -
+        updatedChannel.lastConsumedMessageIndex
+      : 0;
   }
   public addMessage(message) {
     this._messages.push(message);
   }
   public refreshMessages(pageSize?: number) {
     const self = this;
-    return this._channel.getMessages(pageSize).then(result => {
-      this._messages = result.items;1
+    return this._channel.getMessages(pageSize).then((result) => {
+      this._messages = result.items;
+      1;
       return self;
     });
   }

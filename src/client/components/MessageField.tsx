@@ -1,5 +1,5 @@
-import React, { SyntheticEvent, useRef } from "react";
-import { Channel } from "../domain/Channel";
+import React, { SyntheticEvent, useRef } from 'react';
+import { Channel } from '../domain/Channel';
 
 export const MessageField = ({ channel }: { channel: Channel }) => {
   const textareaRef = useRef<HTMLTextAreaElement>();
@@ -7,7 +7,7 @@ export const MessageField = ({ channel }: { channel: Channel }) => {
     evt.preventDefault();
     evt.stopPropagation();
     channel.sendMessage(textareaRef.current.value).then(() => {
-      console.log("successs");
+      console.log('successs');
     });
   };
 
@@ -17,4 +17,4 @@ export const MessageField = ({ channel }: { channel: Channel }) => {
       <input type="submit" value="Post" />
     </form>
   );
-}
+};
