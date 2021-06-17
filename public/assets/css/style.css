@@ -12,6 +12,10 @@
   font-size: 1em;
   flex: 1;
 }
+.header__username {
+  display: inline-block;
+  margin-left: 10px;
+}
 .main {
   display: grid;
   grid-template-columns: 300px 1fr;
