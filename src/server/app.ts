@@ -50,7 +50,7 @@ app.post("/post-hook", (req: Request, res: Response) => {
 app.use((err, req: Request, res: Response, next) => {
   console.error(err.stack || err)
 
-  res.status(503)
+  res.status(500)
   res.send("Internal server error")
 })
 
