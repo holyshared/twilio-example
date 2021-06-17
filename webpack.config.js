@@ -30,6 +30,7 @@ module.exports = [
     },
     plugins: [
       new webpack.DefinePlugin({
+        'process.env.TWILIO_IDENTITY': JSON.stringify(process.env.TWILIO_IDENTITY),
         'process.env.FIREBASE_API_KEY': JSON.stringify(process.env.FIREBASE_API_KEY),
         'process.env.FIREBASE_AUTH_DOMAIN': JSON.stringify(process.env.FIREBASE_AUTH_DOMAIN),
         'process.env.FIREBASE_PROJECT_ID': JSON.stringify(process.env.FIREBASE_PROJECT_ID),
