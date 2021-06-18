@@ -7,9 +7,12 @@ const main = async () => {
   );
   const channel = await client.chat.services(process.env.TWILIO_SERVICE_SID).channels(process.env.TWILIO_CHANNEL).fetch();
   await channel.messages().create({
-    from: process.env.TWILIO_IDENTITY,
+    from: "auth0|60c325974de8ad0069c3cbbf",
     body: "message 1",
-    xTwilioWebhookEnabled: "true"
+    xTwilioWebhookEnabled: "true",
+    attributes: JSON.stringify({
+      muteNotification: true
+    })
   });
 }
 

@@ -2,20 +2,23 @@ import React, {
   createContext,
   useState,
   useEffect,
+  useContext,
   PropsWithChildren,
 } from 'react';
 import { create, Chat } from './twilio-client';
 import { httpClient } from './axios';
-import { Loading } from '../Loading';
+import { LoadingPage } from '../LoadingPage';
+import { IdentityContext } from '../contexts/identity';
 
 export const TwilioContext = createContext<Chat | null>(null);
 
 export const TwilioProvider = ({ children }: PropsWithChildren<{}>) => {
+  const identity = useContext(IdentityContext);
   const [currentClient, setClient] = useState(null);
 
   useEffect(() => {
     httpClient
-      .post('/token')
+      .post('/token', { identity })
       .then((res) => {
         return create(res.data.jwt);
       })
@@ -26,13 +29,13 @@ export const TwilioProvider = ({ children }: PropsWithChildren<{}>) => {
       .catch((err) => {
         console.log(err);
       });
-  }, [setClient]);
+  }, [setClient, identity]);
 
   return currentClient ? (
     <TwilioContext.Provider value={currentClient}>
       {children}
     </TwilioContext.Provider>
   ) : (
-    <Loading message="Initializing" />
+    <LoadingPage message="Initializing" />
   );
 };

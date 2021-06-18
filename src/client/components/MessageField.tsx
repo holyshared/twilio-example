@@ -11,19 +11,21 @@ export const MessageField = ({ channel }: { channel: Channel }) => {
     let attributes = null;
     if (checkboxRef.current.checked) {
       attributes = {
-        muteNotification: true
+        muteNotification: true,
       };
     }
 
     channel.sendMessage(textareaRef.current.value, attributes).then(() => {
-      console.log("done send message");
+      console.log('done send message');
     });
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <textarea name="postMessage" ref={textareaRef} rows={3}></textarea>
-      <label><input type="checkbox" ref={checkboxRef} /> Muto push notification</label>
+      <label>
+        <input type="checkbox" ref={checkboxRef} /> Muto push notification
+      </label>
       <input type="submit" value="Post" />
     </form>
   );

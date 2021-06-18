@@ -115,26 +115,28 @@ export const Main = () => {
 
   return (
     <div className="main">
-      <div className="channels">
-        {currentChannel && currentChannels ? (
-          <ChannelList
-            current={currentChannel}
-            channels={currentChannels}
-            onChannelSelect={handleChannelSelect}
-          />
-        ) : (
-          <Loading message="Loading channels" />
-        )}
-      </div>
-      <div className="messages">
-        {currentChannel && currentChannels ? (
-          <>
-            <MessageList items={currentChannel.messages} />
-            <MessageField channel={currentChannel} />
-          </>
-        ) : (
-          <Loading message="Loading channel" />
-        )}
+      <div className="main__container">
+        <div className="channels">
+          {currentChannel && currentChannels ? (
+            <ChannelList
+              current={currentChannel}
+              channels={currentChannels}
+              onChannelSelect={handleChannelSelect}
+            />
+          ) : (
+            <Loading message="Loading channels" />
+          )}
+        </div>
+        <div className="messages">
+          {currentChannel && currentChannels ? (
+            <>
+              <MessageList items={currentChannel.messages} />
+              <MessageField channel={currentChannel} />
+            </>
+          ) : (
+            <Loading message="Loading channel" />
+          )}
+        </div>
       </div>
     </div>
   );

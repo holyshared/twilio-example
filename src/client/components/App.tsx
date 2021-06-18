@@ -1,19 +1,20 @@
 import React from 'react';
 import { TwilioProvider } from './contexts/twilio';
+import { IdentityProvider } from './contexts/identity';
+import { Header } from './Header';
 import { Main } from './Main';
 
-const identity = process.env.TWILIO_IDENTITY;
+export const App = () => {
+  const identity = location.hash
+    ? location.hash.substr(1)
+    : process.env.TWILIO_IDENTITY;
 
-export const App = () => (
-  <>
-    <header className="header">
-      <h1 className="header__title">
-        <span className="header__app__name">Chat Application</span>
-        <span className="header__username">{identity}</span>
-      </h1>
-    </header>
-    <TwilioProvider>
-      <Main />
-    </TwilioProvider>
-  </>
-);
+  return (
+    <IdentityProvider value={identity}>
+      <Header />
+      <TwilioProvider>
+        <Main />
+      </TwilioProvider>
+    </IdentityProvider>
+  );
+};

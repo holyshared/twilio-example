@@ -17,11 +17,22 @@
   margin-left: 10px;
 }
 .main {
-  display: grid;
-  grid-template-columns: 300px 1fr;
   margin: 20px auto 0 auto;
   width: 1000px;
 }
+.main__container {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+}
+.main--fluid {
+  display: block;
+  margin: 20px auto 0 auto;
+  width: 1000px;
+}
+.messages {
+  margin-left: 15px;
+}
+
 .channel__list {
   margin: 0;
   padding: 0;

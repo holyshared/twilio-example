@@ -28,7 +28,9 @@ export class Channel {
   //  return this._channel.getMessages(pageSize);
   //  }
   public sendMessage(message: string, attributes: any) {
-    return attributes ? this._channel.sendMessage(message, attributes) : this._channel.sendMessage(message);
+    return attributes
+      ? this._channel.sendMessage(message, attributes)
+      : this._channel.sendMessage(message);
   }
   public on(type: string, handler: any) {
     this._channel.on(type, handler);
