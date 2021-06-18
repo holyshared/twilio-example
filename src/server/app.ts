@@ -56,11 +56,13 @@ app.post('/token', (req: Request, res: Response) => {
     pushCredentialSid: process.env.TWILIO_PUSH_CREDENTIAL_SID,
   });
 
+  const identity = req.body.identity || process.env.TWILIO_IDENTITY;
+
   const token = new jwt.AccessToken(
     process.env.TWILIO_ACCOUNT_SID,
     process.env.TWILIO_API_KEY,
     process.env.TWILIO_API_SECRET,
-    { identity: process.env.TWILIO_IDENTITY }
+    { identity }
   );
 
   token.addGrant(chatGrant);
