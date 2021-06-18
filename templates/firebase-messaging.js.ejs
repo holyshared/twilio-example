@@ -1,6 +1,6 @@
-importScripts('https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js')
-importScripts('https://www.gstatic.com/firebasejs/8.6.7/firebase-messaging.js')
-importScripts('/sw-env.js')
+importScripts('https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/8.6.7/firebase-messaging.js');
+importScripts('/sw-env.js');
 
 firebase.initializeApp({
   apiKey: '<%= FIREBASE_API_KEY %>',
@@ -9,19 +9,20 @@ firebase.initializeApp({
   storageBucket: '<%= FIREBASE_STORAGE_BUCKET %>',
   messagingSenderId: '<%= FIREBASE_MESSAGING_SENDER_ID %>',
   appId: '<%= FIREBASE_APP_ID %>'
-})
+});
 
-const messaging = firebase.messaging()
+const messaging = firebase.messaging();
 messaging.setBackgroundMessageHandler((payload) => {
 console.log("setBackgroundMessageHandler------");
 console.log(payload);
-  const notificationTitle = 'New message'
+  const notificationTitle = 'New message';
   const notificationOptions = {
     body: payload.data.twi_body,
     icon: '/assets/images/favicon.png'
-  }
+  };
   return self.registration.showNotification(
     notificationTitle,
-    notificationOptions
-  )
+    payload.data.twi_body
+//    notificationOptions
+  );
 })
