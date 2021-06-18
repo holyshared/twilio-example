@@ -13,6 +13,8 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging()
 messaging.setBackgroundMessageHandler((payload) => {
+console.log("setBackgroundMessageHandler------");
+console.log(payload);
   const notificationTitle = 'New message'
   const notificationOptions = {
     body: payload.data.twi_body,
