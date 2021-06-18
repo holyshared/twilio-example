@@ -1,0 +1,9 @@
+{
+  "name": "Service Worker Sample",
+  "short_name": "sw sample",
+  "icons": [],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#e91e63",
+  "gcm_sender_id": "300269857585"
+}
