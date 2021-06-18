@@ -98,6 +98,7 @@ export const Main = () => {
         result = await twilio.getSubscribedChannels();
         channels = channels.concat( result.items.map((item) => new Channel(item)) );
       }
+      console.log("channel loaded");
       const channel = await channels[0].refreshMessages(MESSAGE_COUNT);
 
       setCurrentChannels(channels);
