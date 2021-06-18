@@ -92,8 +92,12 @@ export const Main = () => {
         twilio.handlePushNotification(payload);
       });
 
-      const result = await twilio.getSubscribedChannels();
-      const channels = result.items.map((item) => new Channel(item));
+      let result = await twilio.getSubscribedChannels();
+      let channels = result.items.map((item) => new Channel(item));
+      while (result.hasNextPage) {
+        result = await twilio.getSubscribedChannels();
+        channels = channels.concat( result.items.map((item) => new Channel(item)) );
+      }
       const channel = await channels[0].refreshMessages(MESSAGE_COUNT);
 
       setCurrentChannels(channels);
