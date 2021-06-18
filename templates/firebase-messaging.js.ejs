@@ -20,12 +20,8 @@ console.log(payload);
     body: payload.data.twi_body,
     icon: '/assets/images/favicon.png'
   };
-  const result = self.registration.showNotification(
+  return self.registration.showNotification(
     notificationTitle,
-    payload.data.twi_body
-//    notificationOptions
+    notificationOptions
   );
-console.log("showNotification");
-
-  return result.then(() => console.log("done show"));
 });
