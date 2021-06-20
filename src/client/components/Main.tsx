@@ -109,11 +109,13 @@ export const Main = () => {
   }, [twilio]);
 
   useEffect(() => {
+    console.log("on events");
     twilio.on('messageAdded', handleMessageAdded);
     twilio.on('channelUpdated', handleUpdated);
     twilio.on('pushNotification', handlePushNotification);
 
     return () => {
+      console.log("off events");
       twilio.off('messageAdded', handleMessageAdded);
       twilio.off('channelUpdated', handleUpdated);
       twilio.off('pushNotification', handlePushNotification);
