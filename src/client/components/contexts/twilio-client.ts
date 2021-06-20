@@ -73,6 +73,9 @@ class TwilioClientAdapter implements TwilioClient {
     });
 
     this.twilio.on('pushNotification', (notification: Notification) => {
+
+console.log('pushNotification---------');
+console.log(notification);
       navigator.serviceWorker.ready.then((registration) => {
         registration.showNotification(
           `New message: ${notification.data.author}`,
