@@ -3,8 +3,17 @@ import ReactDOM from 'react-dom';
 import { App } from './components/App';
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('/firebase-messaging-sw.js');
+  navigator.serviceWorker.register('/firebase-messaging-sw.js');
+
+  Notification.requestPermission((result) => {
+    if (result !== 'granted') {
+      return;
+    }
+    navigator.serviceWorker.ready.then((registration) => {
+      registration.showNotification('ServiceWorker ready', {
+        body: 'ServiceWorker ready',
+      });
+    });
   });
 }
 
