@@ -8,7 +8,10 @@ import 'firebase/messaging';
 
 export interface TwilioClient {
   getSubscribedChannels(): Promise<Channel[]>;
-  on(type: 'messageAdded' | 'channelUpdated' | 'pushNotification', handler: any): void;
+  on(
+    type: 'messageAdded' | 'channelUpdated' | 'pushNotification',
+    handler: any
+  ): void;
   listen(): Promise<void>;
 }
 
@@ -19,26 +22,25 @@ type ChannelUpdated = (evt: {
 
 type MessageAdded = (message: TwilioMessage) => void;
 
-
 interface Notification {
-  action:	string;
-  badge: number;
-
-body: string;
-data: {
-  channelSid:	string;
-messageIndex:	number;
-messageSid:	string;
-};
-sound: string;
-title: string;
-type : 'twilio.channel.new_message'
-
+  data: {
+    channelSid: string;
+    messageIndex: number;
+    messageSid: string;
+    author: string;
+    channel_id: string;
+    channel_sid: string;
+    channel_title: string;
+    message_id: string;
+    message_index: string;
+    message_sid: string;
+    twi_body: string;
+    twi_message_id: string;
+    twi_message_type: 'twilio.channel.new_message';
+  };
 }
 
 type PushNotification = (notification: Notification) => void;
-
-
 
 class TwilioClientAdapter implements TwilioClient {
   private twilio: Twilio;
@@ -70,12 +72,15 @@ class TwilioClientAdapter implements TwilioClient {
       this.twilio.handlePushNotification(payload);
     });
 
-    this.twilio.on("pushNotification", (notification: Notification) => {
+    this.twilio.on('pushNotification', (notification: Notification) => {
       navigator.serviceWorker.ready.then((registration) => {
-        registration.showNotification(notification.title, {
-          body: notification.body
-        });
-      })
+        registration.showNotification(
+          `New message: ${notification.data.author}`,
+          {
+            body: notification.data.twi_body,
+          }
+        );
+      });
     });
   }
 
