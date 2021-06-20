@@ -5,16 +5,16 @@ import React, {
   useContext,
   PropsWithChildren,
 } from 'react';
-import { create, Chat } from './twilio-client';
+import { create, TwilioClient } from './twilio-client';
 import { httpClient } from './axios';
 import { LoadingPage } from '../LoadingPage';
 import { IdentityContext } from '../contexts/identity';
 
-export const TwilioContext = createContext<Chat | null>(null);
+export const TwilioContext = createContext<TwilioClient | null>(null);
 
 export const TwilioProvider = ({ children }: PropsWithChildren<{}>) => {
   const identity = useContext(IdentityContext);
-  const [currentClient, setClient] = useState(null);
+  const [currentClient, setClient] = useState<TwilioClient | null>(null);
 
   useEffect(() => {
     httpClient
