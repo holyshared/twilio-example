@@ -23,21 +23,17 @@ type ChannelUpdated = (evt: {
 type MessageAdded = (message: TwilioMessage) => void;
 
 interface Notification {
+  action?: string;
+  badge?: string;
+  body: string;
   data: {
     channelSid: string;
-    messageIndex: number;
     messageSid: string;
-    author: string;
-    channel_id: string;
-    channel_sid: string;
-    channel_title: string;
-    message_id: string;
-    message_index: string;
-    message_sid: string;
-    twi_body: string;
-    twi_message_id: string;
-    twi_message_type: 'twilio.channel.new_message';
+    messageIndex: number;
   };
+  sound?: string;
+  title?: string;
+  type: 'twilio.channel.new_message';
 }
 
 type PushNotification = (notification: Notification) => void;
@@ -73,16 +69,12 @@ class TwilioClientAdapter implements TwilioClient {
     });
 
     this.twilio.on('pushNotification', (notification: Notification) => {
-
-console.log('pushNotification---------');
-console.log(notification);
+      console.log('pushNotification---------');
+      console.log(notification);
       navigator.serviceWorker.ready.then((registration) => {
-        registration.showNotification(
-          `New message: ${notification.data.author}`,
-          {
-            body: notification.data.twi_body,
-          }
-        );
+        registration.showNotification('New message', {
+          body: notification.body,
+        });
       });
     });
   }
@@ -100,7 +92,7 @@ console.log(notification);
 
   on(
     type: 'messageAdded' | 'channelUpdated',
-    handler: MessageAdded | ChannelUpdated
+    handler: MessageAdded | ChannelUpdated | PushNotification
   ): void {
     this.twilio.on(type, handler);
   }
