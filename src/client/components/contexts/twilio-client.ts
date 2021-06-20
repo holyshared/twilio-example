@@ -8,7 +8,7 @@ import 'firebase/messaging';
 
 export interface TwilioClient {
   getSubscribedChannels(): Promise<Channel[]>;
-  on(type: 'messageAdded' | 'channelUpdated', handler: any): void;
+  on(type: 'messageAdded' | 'channelUpdated' | 'pushNotification', handler: any): void;
   listen(): Promise<void>;
 }
 
@@ -18,6 +18,27 @@ type ChannelUpdated = (evt: {
 }) => void;
 
 type MessageAdded = (message: TwilioMessage) => void;
+
+
+interface Notification {
+  action:	string;
+  badge: number;
+
+body: string;
+data: {
+  channelSid:	string;
+messageIndex:	number;
+messageSid:	string;
+};
+sound: string;
+title: string;
+type : 'twilio.channel.new_message'
+
+}
+
+type PushNotification = (notification: Notification) => void;
+
+
 
 class TwilioClientAdapter implements TwilioClient {
   private twilio: Twilio;
@@ -47,6 +68,14 @@ class TwilioClientAdapter implements TwilioClient {
       console.log('onMessage');
       console.log(payload);
       this.twilio.handlePushNotification(payload);
+    });
+
+    this.twilio.on("pushNotification", (notification: Notification) => {
+      navigator.serviceWorker.ready.then((registration) => {
+        registration.showNotification(notification.title, {
+          body: notification.body
+        });
+      })
     });
   }
 
