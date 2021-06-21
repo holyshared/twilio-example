@@ -56,6 +56,10 @@ export class Channel {
   }
   public addMessage(message: TwilioMessage) {
     const attributes = message.attributes as { saveMessageIndex?: boolean };
+
+    console.log("attributes.saveMessageIndex");
+    console.log(attributes.saveMessageIndex);
+
     if (!!attributes.saveMessageIndex) {
       this._ignoreMessageIndexes.push(message.index);
     }
