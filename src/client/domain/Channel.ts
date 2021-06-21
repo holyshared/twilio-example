@@ -52,6 +52,15 @@ export class Channel {
       (total, index) => (isIgnoreMessage(index) ? total++ : total),
       0
     );
+    console.log("consumed state");
+    console.log(updatedChannel.lastConsumedMessageIndex);
+    console.log(updatedChannel.lastMessage.index);
+
+    console.log("unreadCount");
+    console.log(unreadCount);
+
+    console.log("forceReadedCount");
+    console.log(forceReadedCount);
     this._unreadCount = unreadCount - forceReadedCount;
     return this._unreadCount;
   }
