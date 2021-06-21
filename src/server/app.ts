@@ -79,6 +79,10 @@ app.post('/token', (req: Request, res: Response) => {
 app.get(
   '/marked_messages',
   (req: Request<MarkedMessagesQuery, {}, {}>, res: Response) => {
+
+console.log("req.params---");
+console.log(req.params);
+
     getIgnoreMessageIndexes(req.params.userId, req.params.channelIds)
       .then((readedMessageIndexes) => {
         res.status(200).json({
