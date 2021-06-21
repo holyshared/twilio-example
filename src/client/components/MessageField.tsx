@@ -30,8 +30,13 @@ export const MessageField = ({ channel }: { channel: Channel }) => {
   return (
     <form onSubmit={handleSubmit}>
       <textarea name="postMessage" ref={textareaRef} rows={3}></textarea>
-      <label><input type="checkbox" ref={mutePushNotificationRef} /> Mute push notification</label>
-      <label><input type="checkbox" ref={excludeUnreadRef} /> Exclude from unread</label>
+      <label>
+        <input type="checkbox" ref={mutePushNotificationRef} /> Mute push
+        notification
+      </label>
+      <label>
+        <input type="checkbox" ref={excludeUnreadRef} /> Exclude from unread
+      </label>
       <input type="submit" value="Post" />
     </form>
   );

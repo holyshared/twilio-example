@@ -46,14 +46,9 @@ export const useConversation = ({ messagCount }: { messagCount: number }) => {
         }
       );
       res.data.readedMessageIndexes.forEach((readed) => {
-        const target = channels.find(
-          (channel) => {
-            console.log(channel.sid);
-            console.log(readed.channelId);
-
-            return channel.sid === readed.channelId;
-          }
-        );
+        const target = channels.find((channel) => {
+          return channel.sid === readed.channelId;
+        });
         target.refreshIgnoreMessageIndexes(readed.messageIndexes);
       });
 
@@ -62,7 +57,7 @@ export const useConversation = ({ messagCount }: { messagCount: number }) => {
         console.log(message);
         const target = channels.find((c) => c.sid === message.channel.sid);
 
-        if (identity === "auth0|60c3259acef301006a0e591a") {
+        if (identity === 'auth0|60c3259acef301006a0e591a') {
           target.addMessageWithIgnoreMessage(message);
         } else {
           target.addMessage(message);

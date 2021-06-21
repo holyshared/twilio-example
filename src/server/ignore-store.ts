@@ -18,7 +18,7 @@ export const getIgnoreMessageIndexes = async (
   const messageIndexes = keys.map(async (key) => {
     const last = await client.llen(key);
     const indexes = await client.lrange(key, 0, last);
-    const keyItems = key.split("#");
+    const keyItems = key.split('#');
     return { channelId: keyItems[1], messageIndexes: indexes.map(Number) };
   });
   return Promise.all(messageIndexes);

@@ -41,25 +41,32 @@ export class Channel {
     this._channel.removeListener(type, handler);
   }
   public refresh(updatedChannel: TwilioChannel) {
+    const lastConsumedMessageIndex =
+      updatedChannel.lastConsumedMessageIndex || 0;
     const unreadCount = updatedChannel.lastMessage
-      ? updatedChannel.lastMessage.index -
-        updatedChannel.lastConsumedMessageIndex
+      ? updatedChannel.lastMessage.index - lastConsumedMessageIndex
       : 0;
-    const isIgnoreMessage = (messageIndex: number) =>
-      updatedChannel.lastMessage.index >= messageIndex &&
-      messageIndex >= updatedChannel.lastConsumedMessageIndex;
+    const isIgnoreMessage = (messageIndex: number) => {
+      console.log('ignore');
+      console.log(messageIndex);
+      return (
+        updatedChannel.lastMessage.index >= messageIndex &&
+        messageIndex >= lastConsumedMessageIndex
+      );
+    };
+
     const forceReadedCount = this._ignoreMessageIndexes.reduce(
       (total, index) => (isIgnoreMessage(index) ? total++ : total),
       0
     );
-    console.log("consumed state");
-    console.log(updatedChannel.lastConsumedMessageIndex);
-    console.log(updatedChannel.lastMessage.index);
+    console.log('consumed state');
+    console.log(lastConsumedMessageIndex);
+    console.log((updatedChannel.lastMessage || { index: 0 }).index);
 
-    console.log("unreadCount");
+    console.log('unreadCount');
     console.log(unreadCount);
 
-    console.log("forceReadedCount");
+    console.log('forceReadedCount');
     console.log(forceReadedCount);
     this._unreadCount = unreadCount - forceReadedCount;
     return this._unreadCount;
