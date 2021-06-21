@@ -29,8 +29,8 @@ export const useConversation = ({ messagCount }: { messagCount: number }) => {
       const channel = await channels[0].refreshMessages(messagCount);
 
       twilio.on('messageAdded', (message) => {
-console.log("messageAdded");
-console.log(message);
+        console.log('messageAdded');
+        console.log(message);
         const target = channels.find((c) => c.sid === message.channel.sid);
         target.addMessage(message);
 

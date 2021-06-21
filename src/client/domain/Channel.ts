@@ -5,12 +5,14 @@ export class Channel {
   private _channel: TwilioChannel;
   private _messages: TwilioMessage[] = [];
   private _unreadCount: number = 0;
+  private _ignoreMessageIndexes: number[] = [];
 
   constructor(channel: TwilioChannel) {
     this._channel = channel;
     this._unreadCount = channel.lastMessage
       ? channel.lastMessage.index - channel.lastConsumedMessageIndex
       : 0;
+    this._ignoreMessageIndexes = [];
   }
   get sid() {
     return this._channel.sid;
@@ -44,8 +46,13 @@ export class Channel {
         updatedChannel.lastConsumedMessageIndex
       : 0;
   }
-  public addMessage(message) {
+  public addMessage(message: TwilioMessage) {
+    const attributes = message.attributes as { muteNotification?: boolean };
+    if (!!attributes.muteNotification) {
+      this._ignoreMessageIndexes.push(message.index);
+    }
     this._messages.push(message);
+    this.refresh(message.channel);
   }
   public refreshMessages(pageSize?: number) {
     const self = this;

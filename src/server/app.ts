@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { urlencoded, json } from 'body-parser';
 import { jwt } from 'twilio';
+import { addIgnoreMessage } from './ignore-store';
 
 interface PreHookBody {
   ChannelSid: string;
@@ -92,11 +93,29 @@ app.post(
 
 app.post(
   '/post-hook',
-  (req: Request<{}, PostHookBody, PostHookBody>, res: Response) => {
+  async (req: Request<{}, PostHookBody, PostHookBody>, res: Response) => {
     console.log('post-hook ------');
     console.log(req.headers);
     console.log(req.body);
-    res.status(200).end();
+
+    if (req.body.EventType !== 'onMessageSend') {
+      res.status(200).end();
+    }
+
+    const attributes = JSON.parse(req.body.Attributes) as MessageAttributes;
+    if (!attributes.save) {
+      res.status(200).end();
+    }
+
+    addIgnoreMessage(req.body.From, req.body.ChannelSid, req.body.Index)
+      .then(() => {
+        console.info("add ignore messages");
+        res.status(200).end();
+      })
+      .catch((err: Error) => {
+        console.error(err.stack);
+        res.status(500).end();
+      });
   }
 );
 
