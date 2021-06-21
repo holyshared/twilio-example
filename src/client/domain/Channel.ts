@@ -41,10 +41,18 @@ export class Channel {
     this._channel.removeListener(type, handler);
   }
   public refresh(updatedChannel: TwilioChannel) {
-    this._unreadCount = updatedChannel.lastMessage
+    const unreadCount = updatedChannel.lastMessage
       ? updatedChannel.lastMessage.index -
         updatedChannel.lastConsumedMessageIndex
       : 0;
+    const isIgnoreMessage = (messageIndex: number) =>
+      updatedChannel.lastMessage.index <= messageIndex &&
+      messageIndex >= updatedChannel.lastConsumedMessageIndex;
+    const forceReadedCount = this._ignoreMessageIndexes.reduce(
+      (total, index) => (isIgnoreMessage(index) ? total++ : total),
+      0
+    );
+    return unreadCount - forceReadedCount;
   }
   public addMessage(message: TwilioMessage) {
     const attributes = message.attributes as { muteNotification?: boolean };
@@ -53,6 +61,10 @@ export class Channel {
     }
     this._messages.push(message);
     this.refresh(message.channel);
+  }
+  public refreshIgnoreMessageIndexes(messageIndexs: number[]) {
+    this._ignoreMessageIndexes = messageIndexs;
+    this.refresh(this._channel);
   }
   public refreshMessages(pageSize?: number) {
     const self = this;
