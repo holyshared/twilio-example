@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { urlencoded, json } from 'body-parser';
 import { jwt } from 'twilio';
-import { addIgnoreMessage } from './ignore-store';
+import { addIgnoreMessage, getIgnoreMessageIndexes } from './ignore-store';
 
 interface PreHookBody {
   ChannelSid: string;
@@ -38,6 +38,11 @@ interface MessageAttributes {
   save?: boolean;
 }
 
+interface MarkedMessagesQuery {
+  userId: string;
+  channelIds: string[];
+}
+
 const ChatGrant = jwt.AccessToken.ChatGrant;
 
 const app = express();
@@ -70,6 +75,22 @@ app.post('/token', (req: Request, res: Response) => {
 
   res.json({ jwt: token.toJwt() });
 });
+
+app.get(
+  '/marked_messages',
+  (req: Request<MarkedMessagesQuery, {}, {}>, res: Response) => {
+    getIgnoreMessageIndexes(req.params.userId, req.params.channelIds)
+      .then((readedMessageIndexes) => {
+        res.status(200).json({
+          readedMessageIndexes,
+        });
+      })
+      .catch((err: Error) => {
+        console.error(err.stack);
+        res.status(500).end();
+      });
+  }
+);
 
 app.post(
   '/pre-hook',
@@ -109,7 +130,7 @@ app.post(
 
     addIgnoreMessage(req.body.From, req.body.ChannelSid, req.body.Index)
       .then(() => {
-        console.info("add ignore messages");
+        console.info('add ignore messages');
         res.status(200).end();
       })
       .catch((err: Error) => {
