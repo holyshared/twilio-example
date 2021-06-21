@@ -52,7 +52,8 @@ export class Channel {
       (total, index) => (isIgnoreMessage(index) ? total++ : total),
       0
     );
-    return unreadCount - forceReadedCount;
+    this._unreadCount = unreadCount - forceReadedCount;
+    return this._unreadCount;
   }
   public addMessageWithIgnoreMessage(message: TwilioMessage) {
     const attributes = message.attributes as { saveMessageIndex?: boolean };
