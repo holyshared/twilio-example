@@ -1,5 +1,4 @@
-import express, { Request, Response } from 'express';
-import { urlencoded, json } from 'body-parser';
+import express, { Request, Response, urlencoded, json } from 'express';
 import { jwt } from 'twilio';
 import { addIgnoreMessage, getIgnoreMessageIndexes } from './ignore-store';
 
@@ -35,7 +34,7 @@ interface PostHookBody {
 
 interface MessageAttributes {
   muteNotification?: boolean;
-  save?: boolean;
+  saveMessageIndex?: boolean;
 }
 
 interface MarkedMessagesQuery {
@@ -78,12 +77,8 @@ app.post('/token', (req: Request, res: Response) => {
 
 app.get(
   '/marked_messages',
-  (req: Request<MarkedMessagesQuery, {}, {}>, res: Response) => {
-
-console.log("req.params---");
-console.log(req.params);
-
-    getIgnoreMessageIndexes(req.params.userId, req.params.channelIds)
+  (req: Request<{}, {}, {}, MarkedMessagesQuery>, res: Response) => {
+    getIgnoreMessageIndexes(req.query.userId, req.query.channelIds)
       .then((readedMessageIndexes) => {
         res.status(200).json({
           readedMessageIndexes,
@@ -128,7 +123,7 @@ app.post(
     }
 
     const attributes = JSON.parse(req.body.Attributes) as MessageAttributes;
-    if (!attributes.save) {
+    if (!attributes.saveMessageIndex) {
       res.status(200).end();
     }
 

@@ -47,7 +47,12 @@ export const useConversation = ({ messagCount }: { messagCount: number }) => {
       );
       res.data.readedMessageIndexes.forEach((readed) => {
         const target = channels.find(
-          (channel) => channel.sid === readed.channelId
+          (channel) => {
+            console.log(channel.sid);
+            console.log(readed.channelId);
+
+            return channel.sid === readed.channelId;
+          }
         );
         target.refreshIgnoreMessageIndexes(readed.messageIndexes);
       });

@@ -3,15 +3,22 @@ import { Channel } from '../domain/Channel';
 
 export const MessageField = ({ channel }: { channel: Channel }) => {
   const textareaRef = useRef<HTMLTextAreaElement>();
-  const checkboxRef = useRef<HTMLInputElement>();
+  const mutePushNotificationRef = useRef<HTMLInputElement>();
+  const excludeUnreadRef = useRef<HTMLInputElement>();
   const handleSubmit = (evt: SyntheticEvent) => {
     evt.preventDefault();
     evt.stopPropagation();
 
     let attributes = null;
-    if (checkboxRef.current.checked) {
+    if (mutePushNotificationRef.current.checked) {
       attributes = {
         muteNotification: true,
+      };
+    }
+
+    if (excludeUnreadRef.current.checked) {
+      attributes = {
+        saveMessageIndex: true,
       };
     }
 
@@ -23,9 +30,8 @@ export const MessageField = ({ channel }: { channel: Channel }) => {
   return (
     <form onSubmit={handleSubmit}>
       <textarea name="postMessage" ref={textareaRef} rows={3}></textarea>
-      <label>
-        <input type="checkbox" ref={checkboxRef} /> Muto push notification
-      </label>
+      <label><input type="checkbox" ref={mutePushNotificationRef} /> Mute push notification</label>
+      <label><input type="checkbox" ref={excludeUnreadRef} /> Exclude from unread</label>
       <input type="submit" value="Post" />
     </form>
   );

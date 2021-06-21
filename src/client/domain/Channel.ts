@@ -55,8 +55,8 @@ export class Channel {
     return unreadCount - forceReadedCount;
   }
   public addMessage(message: TwilioMessage) {
-    const attributes = message.attributes as { muteNotification?: boolean };
-    if (!!attributes.muteNotification) {
+    const attributes = message.attributes as { saveMessageIndex?: boolean };
+    if (!!attributes.saveMessageIndex) {
       this._ignoreMessageIndexes.push(message.index);
     }
     this._messages.push(message);
