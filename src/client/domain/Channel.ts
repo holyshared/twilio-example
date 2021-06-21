@@ -54,20 +54,21 @@ export class Channel {
     );
     return unreadCount - forceReadedCount;
   }
-  public addMessage(message: TwilioMessage) {
+  public addMessageWithIgnoreMessage(message: TwilioMessage) {
     const attributes = message.attributes as { saveMessageIndex?: boolean };
 
-    if (message.author.indexOf("auth0|60c3259acef301006a0e591a")) {
-      console.log("attributes.saveMessageIndex");
-      console.log(attributes.saveMessageIndex);
-
-      if (!!attributes.saveMessageIndex) {
-        this._ignoreMessageIndexes.push(message.index);
-      }
+    if (!!attributes.saveMessageIndex) {
+      this._ignoreMessageIndexes.push(message.index);
     }
     this._messages.push(message);
     this.refresh(message.channel);
   }
+
+  public addMessage(message: TwilioMessage) {
+    this._messages.push(message);
+    this.refresh(message.channel);
+  }
+
   public refreshIgnoreMessageIndexes(messageIndexs: number[]) {
     this._ignoreMessageIndexes = messageIndexs;
     this.refresh(this._channel);
