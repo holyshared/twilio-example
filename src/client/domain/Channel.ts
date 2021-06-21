@@ -46,7 +46,7 @@ export class Channel {
         updatedChannel.lastConsumedMessageIndex
       : 0;
     const isIgnoreMessage = (messageIndex: number) =>
-      updatedChannel.lastMessage.index <= messageIndex &&
+      updatedChannel.lastMessage.index >= messageIndex &&
       messageIndex >= updatedChannel.lastConsumedMessageIndex;
     const forceReadedCount = this._ignoreMessageIndexes.reduce(
       (total, index) => (isIgnoreMessage(index) ? total++ : total),
