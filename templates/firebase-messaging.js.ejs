@@ -25,7 +25,7 @@ console.log(payload);
     notificationOptions
   ).then(() => {
     console.log("show");
-  }).then((err) => {
+  }).catch((err) => {
     console.log("showNotification error");
     console.log(err);
   });
