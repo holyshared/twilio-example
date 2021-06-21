@@ -7,7 +7,7 @@ export const addIgnoreMessage = async (
   channelId: string,
   messageIndex: string
 ) => {
-  return client.rpushx(`${userId}#${channelId}`, messageIndex);
+  return client.lpush(`${userId}#${channelId}`, messageIndex);
 };
 
 export const getIgnoreMessageIndexes = async (
