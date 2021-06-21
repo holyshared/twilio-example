@@ -57,11 +57,13 @@ export class Channel {
   public addMessage(message: TwilioMessage) {
     const attributes = message.attributes as { saveMessageIndex?: boolean };
 
-    console.log("attributes.saveMessageIndex");
-    console.log(attributes.saveMessageIndex);
+    if (message.author.indexOf("auth0|60c3259acef301006a0e591a")) {
+      console.log("attributes.saveMessageIndex");
+      console.log(attributes.saveMessageIndex);
 
-    if (!!attributes.saveMessageIndex) {
-      this._ignoreMessageIndexes.push(message.index);
+      if (!!attributes.saveMessageIndex) {
+        this._ignoreMessageIndexes.push(message.index);
+      }
     }
     this._messages.push(message);
     this.refresh(message.channel);
