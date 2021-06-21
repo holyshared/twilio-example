@@ -43,14 +43,15 @@ export class Channel {
   public refresh(updatedChannel: TwilioChannel) {
     const lastConsumedMessageIndex =
       updatedChannel.lastConsumedMessageIndex || 0;
-    const unreadCount = updatedChannel.lastMessage
-      ? updatedChannel.lastMessage.index - lastConsumedMessageIndex
-      : 0;
+    const lastMessageIndex = (updatedChannel.lastMessage || { index: 0 }).index;
+
+    const unreadCount = lastMessageIndex - lastConsumedMessageIndex;
     const isIgnoreMessage = (messageIndex: number) => {
       console.log('ignore');
-      console.log(messageIndex);
+      console.log(lastMessageIndex >= messageIndex);
+      console.log(messageIndex >= lastConsumedMessageIndex);
       return (
-        updatedChannel.lastMessage.index >= messageIndex &&
+        lastMessageIndex >= messageIndex &&
         messageIndex >= lastConsumedMessageIndex
       );
     };
