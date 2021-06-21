@@ -61,7 +61,12 @@ export const useConversation = ({ messagCount }: { messagCount: number }) => {
         console.log('messageAdded');
         console.log(message);
         const target = channels.find((c) => c.sid === message.channel.sid);
-        target.addMessage(message);
+
+        if (identity === "auth0|60c3259acef301006a0e591a") {
+          target.addMessage(message);
+        } else {
+          target.addMessageWithIgnoreMessage(message);
+        }
 
         setCurrentChannels([...channels]);
       });
