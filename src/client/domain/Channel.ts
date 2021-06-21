@@ -57,7 +57,7 @@ export class Channel {
     };
 
     const forceReadedCount = this._ignoreMessageIndexes.reduce(
-      (total, index) => (isIgnoreMessage(index) ? total++ : total),
+      (total, index) => (isIgnoreMessage(index) ? ++total : total),
       0
     );
     console.log('consumed state');
