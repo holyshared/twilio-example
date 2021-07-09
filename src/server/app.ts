@@ -124,7 +124,8 @@ app.post(
     console.log("X-Twilio-Signature ---", req.header('X-Twilio-Signature'));
     console.log("protocol ---", req.protocol);
     console.log("originalUrl ---", req.originalUrl);
-    console.log(validateExpressRequest(req, process.env.TWILIO_AUTH_TOKEN, { url: "https://twilio-hook-example.herokuapp.com/post-hook" }));
+//    console.log(validateExpressRequest(req, process.env.TWILIO_AUTH_TOKEN, { url: "https://twilio-hook-example.herokuapp.com/post-hook" }));
+    console.log(validateExpressRequest(req, process.env.TWILIO_AUTH_TOKEN));
     console.log(
       validateRequest(process.env.TWILIO_AUTH_TOKEN, req.header('X-Twilio-Signature'), "https://twilio-hook-example.herokuapp.com/post-hook", req.body)
     );
