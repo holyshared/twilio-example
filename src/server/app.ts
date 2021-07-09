@@ -46,6 +46,8 @@ const ChatGrant = jwt.AccessToken.ChatGrant;
 
 const app = express();
 
+app.set('trust proxy', true);
+
 app.use(
   express.static('public', {
     maxAge: 60,
