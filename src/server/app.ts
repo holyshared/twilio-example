@@ -1,5 +1,5 @@
 import express, { Request, Response, urlencoded, json } from 'express';
-import { jwt } from 'twilio';
+import { jwt, validateExpressRequest } from 'twilio';
 import { addIgnoreMessage, getIgnoreMessageIndexes } from './ignore-store';
 
 interface PreHookBody {
@@ -117,6 +117,9 @@ app.post(
     console.log('post-hook ------');
     console.log(req.headers);
     console.log(req.body);
+
+    console.log("validateExpressRequest ---");
+    console.log(validateExpressRequest(req, process.env.TWILIO_AUTH_TOKEN));
 
     if (req.body.EventType !== 'onMessageSend') {
       res.status(200).end();
