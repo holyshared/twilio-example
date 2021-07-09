@@ -1,5 +1,5 @@
 import express, { Request, Response, urlencoded, json } from 'express';
-import { jwt, validateExpressRequest } from 'twilio';
+import { jwt, validateExpressRequest, validateRequest } from 'twilio';
 import { addIgnoreMessage, getIgnoreMessageIndexes } from './ignore-store';
 
 interface PreHookBody {
@@ -123,7 +123,9 @@ app.post(
     console.log("originalUrl ---", req.originalUrl);
     console.log("TWILIO_AUTH_TOKEN ---", process.env.TWILIO_AUTH_TOKEN);
     console.log(validateExpressRequest(req, process.env.TWILIO_AUTH_TOKEN));
-
+    console.log(
+      validateRequest(process.env.TWILIO_AUTH_TOKEN, req.header('X-Twilio-Signature'), "https://twilio-hook-example.herokuapp.com/post-hook", req.body)
+    );
     if (req.body.EventType !== 'onMessageSend') {
       res.status(200).end();
     }
