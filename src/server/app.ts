@@ -121,6 +121,7 @@ app.post(
     console.log("validateExpressRequest ---");
     console.log("X-Twilio-Signature ---", req.header('X-Twilio-Signature'));
     console.log("originalUrl ---", req.originalUrl);
+    console.log("TWILIO_AUTH_TOKEN ---", process.env.TWILIO_AUTH_TOKEN);
     console.log(validateExpressRequest(req, process.env.TWILIO_AUTH_TOKEN));
 
     if (req.body.EventType !== 'onMessageSend') {
